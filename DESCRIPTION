@@ -1,6 +1,6 @@
 Package: gsg
 Type: Package
-Title: Gloabal Sampling Grid simulation framework
+Title: Global Sampling Grid generator
 Version: 1.0
 Author: Lutz Fehrmann [aut, cre], 
         Nils Noelke [aut],
@@ -15,11 +15,12 @@ Authors@R: c(person("Lutz", "Fehrmann", role = c("aut", "cre"), email = "lfehrma
              person("Sebastian", "Schnell", role = "aut", email = "Sebastian.Schnell@outlook.de"))
              person("Levent", "Burggraeven", role = "aut")
 Maintainer: <lfehrma@gwdg.de>
-Description: The package provides utilities for simulating the assessment of
-    land-cover state and change through a global sampling grid. The main focus is
-    on studying the influence of particular desing parameters, such as sample size
-    and the size and shape of different observation units, on the outcome of sample-
-    based land-cover assessments.
+Description: The package provides functions for generating a global sampling 
+  grid that can be used for land-cover assessments. The characterisitcs of the 
+  grid are a constant sampling intensity, a constant distance between sampling 
+  locations along latitudes, and constant distance between circles of latitudes. 
+  The package contains a shiny app for displaying and downloading generated 
+  grids. 
 URL: https://github.com/AWF-GAUG/gsgsim
 License: GPLv3
 Encoding: UTF-8
