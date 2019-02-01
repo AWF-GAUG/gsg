@@ -43,7 +43,7 @@ load_boundary <- function (x = NULL, country_code = 'world', adm_level = 0, ...)
           bnd <- maptools::spRbind(bnd, temp_bnd);
         }
       }
-      bnd <- bnd[, c("ISO", "NAME_ENGLISH")];
+      bnd <- bnd[, c("GID_0", "NAME_0")];
     }
   } else {
     # Load boundary from other vector format using readOGR

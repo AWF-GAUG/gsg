@@ -1,11 +1,37 @@
 Package: gsg
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Gloabal Sampling Grid simulation framework
+Version: 1.0
+Author: Lutz Fehrmann [aut, cre], 
+        Nils Noelke [aut],
+        Collins Kurkunda [aut], 
+        Paul Magdon [aut], 
+        Sebastian Schnell [aut],
+        Levent Burggraeven [aut]
+Authors@R: c(person("Lutz", "Fehrmann", role = c("aut", "cre"), email = "lfehrma@gwgd.de"),
+             person("Nils", "Noelke", role = "aut", email = "nnoelke@gwdg.de"),
+             person("Collins", "Kurkunda", role = "aut", email = "collins.kukunda@forst.uni-goettingen.de"),
+             person("Paul", "Magdon", role = "aut", email = "pmagdon@gwdg.de"),
+             person("Sebastian", "Schnell", role = "aut", email = "Sebastian.Schnell@outlook.de"))
+             person("Levent", "Burggraeven", role = "aut")
+Maintainer: <lfehrma@gwdg.de>
+Description: The package provides utilities for simulating the assessment of
+    land-cover state and change through a global sampling grid. The main focus is
+    on studying the influence of particular desing parameters, such as sample size
+    and the size and shape of different observation units, on the outcome of sample-
+    based land-cover assessments.
+URL: https://github.com/AWF-GAUG/gsgsim
+License: GPLv3
 Encoding: UTF-8
+Depends: 
+  raster,
+  sp,
+  rgeos,
+  rgdal,
+  maptools,
+  shiny,
+  shinyjs,
+  leaflet,
+  DT
 LazyData: true
+RoxygenNote: 6.1.1

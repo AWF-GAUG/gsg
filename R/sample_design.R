@@ -21,19 +21,22 @@
 #' gsg_ger <- gen_gsg(50, ger_bnd);
 #' plot(gsg_ger)
 gen_gsg <- function(dis, bnd = NULL) {
-  wgs84 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0";
+  wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0";
+  wgs84_split <- unlist(stringi::stri_split(wgs84, fixed = " "))
+
   # Area of interest
   if (is.null(bnd)) {
     data("wrld_simpl"); # Using data set from maptools, "countries" in getData() not working
     bnd <- wrld_simpl;
   } else {
-    if (identical(proj4string(bnd),wgs84) == FALSE) {
-      if (!is.na((proj4string(bnd))) == TRUE) {
+    proj_bnd <- unlist(stringi::stri_split(sp::proj4string(bnd), fixed = " "));
+    if (anyNA(match(proj_bnd, wgs84_split))) { # Crs differ
+      if (!is.na((proj4string(bnd)))) {
         warning("bnd has wrong projection! Transformed to EPSG:4326");
         bnd <- sp::spTransform(x = bnd, CRSobj = CRS(wgs84));
       }
-      else if (!is.na((proj4string(bnd))) == FALSE) {
-        warning("bnd has no projection! Projected to EPSG:4326");
+      else if (is.na((proj4string(bnd)))) {
+        warning("bnd has no projection! Set to EPSG:4326");
         proj4string(bnd) <- CRS(wgs84)
       }
     }
@@ -67,7 +70,7 @@ gen_gsg <- function(dis, bnd = NULL) {
   }
 
   spdf_gsg <- sp::SpatialPointsDataFrame(coords = coord,
-                                         data = data.frame(1:nrow(coord)));
+                                         data = data.frame(id = 1:nrow(coord)));
   sp::proj4string(spdf_gsg) <- sp::CRS(wgs84);
 
   # Subset gridpoints falling on land (or in a specific country)
@@ -80,6 +83,8 @@ gen_gsg <- function(dis, bnd = NULL) {
   }
 
   return(SpatialPointsDataFrame(coords = coordinates(spdf_gsg[idx, ]),
-                                data = cbind(1:sum(idx), df_over[idx, ]),
+                                data = data.frame(id = 1:sum(idx),
+                                                  lon = coordinates(spdf_gsg[idx, ])[, 1],
+                                                  lat = coordinates(spdf_gsg[idx, ])[, 2]),
                                 proj4string = raster::crs(spdf_gsg)));
 }

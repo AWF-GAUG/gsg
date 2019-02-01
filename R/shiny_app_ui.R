@@ -1,161 +1,127 @@
+#' Shiny app server object
+#'
+#' @importFrom graphics hist
+#' @import shiny
+shiny_app_ui <- fluidPage(
+  shinyjs::useShinyjs(),
 
-# This is the user-interface definition of a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
+  navbarPage(
+    "Global Sampling Grid",
+    id = "nav",
 
-library(shiny)
-library(shinydashboard)
-library(plotGoogleMaps)
-library(shinyjs)
-library(gsgsim)
-library(leaflet)
-library(leaflet.minicharts)
-library(raster)
-library(DT)
-library(dplyr)
+    tabPanel(
+      "Interactive map",
+      value = "gomap",
 
+      div(
+        class = "outer",
+        tags$head(# Include our custom CSS
+          includeCSS("inst/shiny_app/styles.css")
+        ),
 
-ui <- dashboardPage(
-  dashboardHeader(title = "GSG"),
+        leafletOutput("map", height = "100%", width = "100%")
+      )
+    ),
 
-  # Sidebar with menu
-  dashboardSidebar(
-    sidebarMenu(
-      menuItem("Generate grid", tabName = "generate", icon = icon("gears")),
-      menuItem("Assessment", tabName = "assessment", icon = icon("eye")),
-      menuItem("Data Explorer", tabName = "explorer", icon = icon("table")),
-      menuItem("Analyze", tabName = "analyze", icon = icon("bar-chart"))
-    )
-  ),
+    tabPanel("Data Explorer",
+             DT::dataTableOutput('mytable')),
 
+    tabPanel("Generate/ download GSG",
+             div(id = "settings",
+                 fluidRow(
+                   column(4,
+                          wellPanel(
+                            # Inputs
+                            h4("GSG Area"),
 
-  dashboardBody(
-    tabItems(
-      tabItem("generate",
-              fluidRow(
-                useShinyjs(),
-                box(id = "generate",
-                    width = 6, solidHeader = TRUE,
-                    title = "GSG settings",
+                            # Select country code
+                            selectInput(
+                              "country_code",
+                              "Select countries",
+                              c("World", raster::ccodes()[, 1]),
+                              c("world", raster::ccodes()[, 2]),
+                              multiple = TRUE
+                            ),
 
-                    # Select country code
-                    selectInput(
-                      "country_code",
-                      "Select countries",
-                      c("World", raster::ccodes()[, 1]),
-                      c("world", raster::ccodes()[, 2]),
-                      multiple = TRUE
-                    ),
+                            # Input administrative level
+                            selectInput(
+                              "adm_level",
+                              "Administrative level",
+                              c(
+                                "Level 0" = "0",
+                                "Level 1" = "1",
+                                "Level 2" = "2"
+                              )
+                            ),
 
-                    # File input for aoi
-                    fileInput("aoi",
-                              label = "Upload specific aoi as KML",
+                            radioButtons(
+                              inputId = 'inputformat',
+                              label = 'Upload specific aoi as shapefile (epsg:4326) or KML',
+                              choices = c('Shapefile' = 'shp', 'KML' = 'kml'),
+                              inline = TRUE
+                            ),
+
+                            # File input for aoi
+                            fileInput(
+                              "aoi",
+                              "For .shp upload select the .shp, .prj, .shx and .dbf file simultaneously!",
                               accept = c('.shp', '.dbf', '.sbn', '.sbx', '.shx', ".prj", ".kml"),
                               multiple = TRUE
-                    ),
+                            )
+                          )),
 
-                    # grid distance in km
-                    numericInput("dist", "Grid distance in km", 250
-                    ),
+                   column(4,
+                          wellPanel(
+                            h4("GSG settings"),
+                            # grid distance in km
+                            numericInput("dist", "Grid distance: [km]", 250),
 
-                    # Button "Reset"
-                    actionButton("reset_input", "Reset",
-                                 icon("refresh")
-                    ),
-                    # Button "Generate" (disabled until aoi is selected)
-                    shinyjs::disabled(actionButton("go", "Generate",
-                                                   icon("play")
-                    )),
+                            # Cluster generation
+                            numericInput("clusterpoints", "Points per cluster", 4),
 
-                    # Button "Download" (disabled until grid is generated)
-                    shinyjs::disabled(downloadButton("download", "Download"))
+                            # Cluster configuration
+                            selectInput(
+                              "configuration",
+                              "Cluster configuration",
+                              c(
+                                "Line" = "line",
+                                "L-shape" = "lshape",
+                                "Square" = "square"
+                              )
+                            ),
 
-                ),# box generate closed
+                            # point distance
+                            sliderInput(
+                              "pointdist",
+                              "Point distance: [m]",
+                              min = 0,
+                              max = 500,
+                              value = 70
+                            ),
 
-                # infoBox showing resulting sample size (only after grid is generated)
-                infoBoxOutput("samplesize")
+                            # Button "generate"
+                            actionButton("reset_input", "Reset inputs"),
+                            actionButton("go", "Generate")
+                          )),
 
-                # Preview map
-              ),
-              fluidRow(
-                box(
-                  width = 12, height = "50%", solidHeader = TRUE,
-                  title = "Preview",
-                  leafletOutput("preview")
-                )
-              )
-      ), # tab generate closed
+                   column(4,
+                          wellPanel(
+                            h4("Download GSG"),
+                            textOutput("text1"),
+                            selectInput(
+                              "format",
+                              "Select output format:",
+                              c("ESRI Shapefile" = "shp",
+                                "KML" = "kml")
+                            ),
 
-      tabItem("assessment",
+                            # Button "download"
+                            downloadButton("download", "Download")
 
-              fluidRow(
-                box(id = "mapwindow", width = 8, height = 500,
-                    leafletOutput("googlemap")
-
-
-                ),
-
-                box(id = "pointlist", width = 4, height = 500,
-                    title = "Point list",
-                    DT::dataTableOutput('pointlist'),
-                    actionButton('zoomToPoint', 'zoom to point'),
-
-                    br(),
-                    br(),
-
-                    actionButton('zoomToGrid', 'zoom to grid')
-                )
-              ),
-
-              fluidRow(
-                tabBox(id = "variables", width = 12,
-                       title = "Assess variables",
-                       selected = "Tab3",
-                       tabPanel("Land Cover Components (LCC)",
-                                #verbatimTextOutput('lcc'),
-                                selectInput('lcc_select', 'Select point from list', NULL),
-                                selectInput('lcc_levels_select', 'Select point from list', NULL)
-                       ),
-                       tabPanel("Land use / function attributes (LUA)", "Tab content 2"),
-                       tabPanel("Landscape characteristics", "Note that when side=right, the tab order is reversed.")
-                )
-
-              )
-
-      ), # tab assessment closed
-
-      tabItem("explorer",
-              fluidRow(
-                box(width = 12,
-                    title = "Data Explorer",
-                    DT::dataTableOutput('datatable')
-                )
-              )
-      ), # tab explorer closed
-
-      tabItem("analyze",
-              fluidRow(
-                column(3,
-                       "Select variable"),
-
-                column(
-                  8,
-                  "Results",
-
-                  # tabsetPanel
-                  tabsetPanel(
-                    type = "tabs",
-
-                    tabPanel("Plot", plotOutput("plot")),
-
-                    tabPanel("Summary", verbatimTextOutput("summary")),
-
-                    tabPanel("Table", tableOutput("table"))
-                  )
-                )
-              )) # tab analyze closed
+                          ))
+                 )),
+             #
+             plotOutput("se_plot", width = 450)
     )
   )
 )
