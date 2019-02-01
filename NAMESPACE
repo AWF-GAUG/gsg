@@ -3,6 +3,5 @@
 export(gen_gsg)
 export(launch_app)
 export(load_boundary)
-import(data.table)
 import(shiny)
 importFrom(graphics,hist)

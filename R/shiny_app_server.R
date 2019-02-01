@@ -5,6 +5,9 @@ options(shiny.error = browser)
 #' @param input provided by shiny
 #' @param output provided by shiny
 #'
+#'@examples
+#' # Start shiny app using launch_app() function
+#' launch_app()
 shiny_app_server <- shiny::shinyServer(function(input, output, session) {
   output$map <- leaflet::renderLeaflet({
     leaflet() %>%

@@ -1,8 +1,11 @@
 #' gsgsim
 #'
-#' Gloabal Sampling Grid simulation framework
+#' Gloabal Sampling Grid shiny app
 #'
 #' @name gsgsim
 #' @docType package
-#' @import data.table
+#'
+#' @examples
+#' # Start app using the launcher
+#' launch_app()
 NULL

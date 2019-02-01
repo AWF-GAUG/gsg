@@ -14,3 +14,7 @@ shiny_app_server(input, output, session)
 \description{
 Shiny app server function
 }
+\examples{
+# Start shiny app using launch_app() function
+launch_app()
+}

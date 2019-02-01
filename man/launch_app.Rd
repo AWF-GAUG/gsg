@@ -12,3 +12,7 @@ shiny application object
 \description{
 Launches the gsg shiny app
 }
+\examples{
+# Use launch_app() to start the shiny app
+launch_app()
+}

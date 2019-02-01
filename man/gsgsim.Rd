@@ -6,5 +6,9 @@
 \alias{gsgsim-package}
 \title{gsgsim}
 \description{
-Gloabal Sampling Grid simulation framework
+Gloabal Sampling Grid shiny app
+}
+\examples{
+# Start app using the launcher
+launch_app()
 }
