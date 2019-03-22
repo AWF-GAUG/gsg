@@ -1,8 +1,8 @@
-#' gsgsim
+#' gsg
 #'
 #' Gloabal Sampling Grid shiny app
 #'
-#' @name gsgsim
+#' @name gsg
 #' @docType package
 #'
 #' @examples

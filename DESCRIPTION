@@ -29,6 +29,7 @@ Depends:
   sp,
   rgeos,
   rgdal,
+  geosphere,
   maptools,
   shiny,
   shinyjs,

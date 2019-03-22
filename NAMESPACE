@@ -3,5 +3,6 @@
 export(gen_gsg)
 export(launch_app)
 export(load_boundary)
+export(plot_design)
 import(shiny)
 importFrom(graphics,hist)
