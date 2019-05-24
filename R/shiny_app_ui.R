@@ -9,6 +9,20 @@ shiny_app_ui <- fluidPage(
     "Global Sampling Grid",
     id = "nav",
 
+    tabPanel(
+      "Interactive map",
+      value = "gomap",
+
+      div(
+        class = "outer",
+        tags$head(# Include our custom CSS
+          includeCSS("inst/shiny_app/styles.css")
+        ),
+
+        leafletOutput("map", height = "100%", width = "100%")
+      )
+    ),
+
     tabPanel("Generate/ download GSG",
              div(id = "settings",
                  fluidRow(
@@ -107,19 +121,7 @@ shiny_app_ui <- fluidPage(
              plotOutput("se_plot", width = 450)
     ),
 
-    tabPanel(
-      "Interactive map",
-      value = "gomap",
 
-      div(
-        class = "outer",
-        tags$head(# Include our custom CSS
-          includeCSS("inst/shiny_app/styles.css")
-        ),
-
-        leafletOutput("map", height = "100%", width = "100%")
-      )
-    ),
 
     tabPanel("Data Explorer",
              DT::dataTableOutput('mytable'))
