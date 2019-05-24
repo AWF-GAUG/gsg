@@ -34,7 +34,7 @@ shiny_app_ui <- fluidPage(
                             # Select country code
                             selectInput(
                               "country_code",
-                              "Select countries",
+                              "Select (multiple) countries",
                               c("World", raster::ccodes()[, 1]),
                               c("world", raster::ccodes()[, 2]),
                               multiple = TRUE
@@ -93,7 +93,8 @@ shiny_app_ui <- fluidPage(
                               "Point distance: [m]",
                               min = 0,
                               max = 500,
-                              value = 70
+                              value = 100,
+                              step = 10
                             ),
 
                             # Button "generate"
@@ -116,14 +117,14 @@ shiny_app_ui <- fluidPage(
                             downloadButton("download", "Download")
 
                           ))
-                 )),
+                 ))# ,
              #
-             plotOutput("se_plot", width = 450)
+             # plotOutput("se_plot", width = 450)
     ),
 
 
 
-    tabPanel("Data Explorer",
+    tabPanel("Point list",
              DT::dataTableOutput('mytable'))
   )
 )
