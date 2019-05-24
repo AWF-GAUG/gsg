@@ -23,8 +23,6 @@ shiny_app_ui <- fluidPage(
       )
     ),
 
-    tabPanel("Data Explorer",
-             DT::dataTableOutput('mytable')),
 
     tabPanel("Generate/ download GSG",
              div(id = "settings",
@@ -122,6 +120,10 @@ shiny_app_ui <- fluidPage(
                  )),
              #
              plotOutput("se_plot", width = 450)
-    )
+    ),
+
+
+    tabPanel("Data Explorer",
+             DT::dataTableOutput('mytable'))
   )
 )
