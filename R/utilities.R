@@ -102,7 +102,7 @@ load_boundary <- function (x = NULL, country_code = 'world', adm_level = 0, ...)
 #'                    0, 1, 1), nrow = 3);
 #'
 #' # Export to Shapefile
-#' rgdal::writeOGR(gsg_cl, "gsg_clus.shp", driver = "ESRI Shapefile", layer = "gsg_clus");
+#' rgdal::writeOGR(gsg_clus, "gsg_clus.shp", driver = "ESRI Shapefile", layer = "gsg_clus");
 plot_design <- function(gsg, layout, ref = dim(layout)/2 + 0.5, dist, rot = 0) {
   if (tolower(rot) == "random") {
     rot <- runif(nrow(coords), 0, pi);
