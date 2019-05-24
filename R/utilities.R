@@ -76,7 +76,7 @@ load_boundary <- function (x = NULL, country_code = 'world', adm_level = 0, ...)
 #'
 #' # Define the layout of the point cluster
 #' # 25 points arranged in a square
-#' layout <- matrix(rep(1, 25), nrow = 1);
+#' layout <- matrix(rep(1, 25), nrow = 5);
 #' # 500m between points
 #' dist = 500;
 #' # Centered on the grid points
@@ -103,6 +103,9 @@ load_boundary <- function (x = NULL, country_code = 'world', adm_level = 0, ...)
 #'
 #' # Export to Shapefile
 #' rgdal::writeOGR(gsg_clus, "gsg_clus.shp", driver = "ESRI Shapefile", layer = "gsg_clus");
+#'
+#' # Export to KML
+#' rgdal::writeOGR(gsg_clus, "gsg_clus.kml", driver = "KML", layer = "gsg_clus");
 plot_design <- function(gsg, layout, ref = dim(layout)/2 + 0.5, dist, rot = 0) {
   if (tolower(rot) == "random") {
     rot <- runif(nrow(coords), 0, pi);
