@@ -80,6 +80,13 @@ shiny_app_server <- shiny::shinyServer(function(input, output, session) {
       # isolate () to avoid dependency on input$dist (but reactive on button)
       gsg <- shiny::isolate(gsg::gen_gsg(input$dist, bnd))
 
+      # define cluster configuration based on inputs from ui.R
+
+
+
+      # generate GSG subplots based on inputs from ui.R
+      gsg_clus <- shiny::isolate(gsg::plot_design(gsg,layout, dist=input$pointdist))
+
       # Show resulting sample size
       output$text1 = shiny::renderText({
         paste0("Number of generated points: ", length(gsg))
@@ -103,22 +110,22 @@ shiny_app_server <- shiny::shinyServer(function(input, output, session) {
                      message = 'Calculation in progress',
                      detail = 'Gerenating outputs...')
 
-        # Plot se_plot
-        output$se_plot <- shiny::renderPlot({
-          se_binomial <- function(p) {
-            se <- 100*sqrt((p*(1 - p))/(length(gsg) - 1))/p
-            return(se)
-          }
-
-          curve(se_binomial,
-                from = 0.001,
-                to = 1,
-                main = "Expected standard errors for grid points (no clusters)",
-                xlab = "Expected area proportion of target class",
-                #log = "x",
-                ylab = "Relative standard error (%)"
-          )
-        })
+        # # Plot se_plot
+        # output$se_plot <- shiny::renderPlot({
+        #   se_binomial <- function(p) {
+        #     se <- 100*sqrt((p*(1 - p))/(length(gsg) - 1))/p
+        #     return(se)
+        #   }
+        #
+        #   curve(se_binomial,
+        #         from = 0.001,
+        #         to = 1,
+        #         main = "Expected standard errors for grid points (no clusters)",
+        #         xlab = "Expected area proportion of target class",
+        #         #log = "x",
+        #         ylab = "Relative standard error (%)"
+        #   )
+        # })
 
         ## Interactive Map ###########################################
 
