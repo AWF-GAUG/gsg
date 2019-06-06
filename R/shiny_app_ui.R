@@ -106,6 +106,14 @@ shiny_app_ui <- fluidPage(
                           wellPanel(
                             h4("Download GSG"),
                             textOutput("text1"),
+
+                            radioButtons(
+                              inputId = 'output',
+                              label = 'Export options',
+                              choices = c('Export sample points only' = 'shp', 'Export all subplots' = 'kml'),
+                              inline = FALSE
+                            ),
+
                             selectInput(
                               "format",
                               "Select output format:",
